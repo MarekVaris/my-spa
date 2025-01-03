@@ -22,6 +22,13 @@ document.querySelector('#contact-link').addEventListener('click', (event) => {
     RenderContactPage();
 });
 
+document.querySelector('#gallery-link').addEventListener('click', (event) => {
+    let stateObj = { page: 'gallery' };
+    document.title = 'Gallery';
+    history.pushState(stateObj, "gallery", "?gallery");
+    RenderGalleryPage();
+});
+
 function RenderAboutPage() {
     document.querySelector('main').innerHTML = 
     `
@@ -49,6 +56,78 @@ function RenderContactPage() {
         alert('Form submitted!');
     });
 }
+
+function RenderGalleryPage() {
+    document.querySelector('main').innerHTML = 
+    `
+      <h1 class="title">Gallery</h1>
+      <div class="gallery">
+
+        ${Array(9).fill('').map((_, i) => `
+          <img class="gallery-image lazy" 
+               data-src="public/img/${i+1}.jpg" 
+               alt="Image ${i + 1}">
+        `).join('')}
+      </div>
+      <div class="modal" id="modal" style="display:none;">
+        <span id="close-modal" class="close">&times;</span>
+        <img id="modal-image" class="modal-content" alt="Full Image">
+      </div>
+      `;
+    
+    initializeLazyLoading();
+    initializeModal();
+}
+
+function initializeLazyLoading() {
+    const lazyImages = document.querySelectorAll('.lazy');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          loadImageAsBlob(img.dataset.src).then(blob => {
+            const url = URL.createObjectURL(blob);
+            img.src = url;
+            img.classList.remove('lazy');
+            observer.unobserve(img);
+          });
+        }
+      });
+    });
+  
+    lazyImages.forEach(img => observer.observe(img));
+}
+
+async function loadImageAsBlob(imageUrl) {
+    const response = await fetch(imageUrl)
+    const blob = await response.blob();
+    return blob;
+}
+
+function initializeModal() {
+    const modal = document.getElementById('modal');
+    const modalImage = document.getElementById('modal-image');
+    const closeModal = document.getElementById('close-modal');
+  
+    document.querySelectorAll('.gallery-image').forEach(img => {
+      img.addEventListener('click', () => {
+        modalImage.src = img.src;
+        modal.style.display = 'flex';
+      });
+    });
+  
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+  
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+}
+
 
 function popStateHandler() {
     let loc = window.location.href.toString().split(window.location.host)[1];
