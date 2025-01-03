@@ -39,23 +39,52 @@ function RenderAboutPage() {
 
 function RenderContactPage() {
     document.querySelector('main').innerHTML = `
-    <h1 class="title">Contact with me</h1>
-    <form id="contact
-    -
-    form">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <label for="message">Message:</label>
-    <textarea id="message" name="message" required></textarea>
-    <button type="submit">Send</button>
-    </form>`;
-    document.getElementById('contact-form').addEventListener('submit', (event) => {
-    event.preventDefault();
-        alert('Form submitted!');
+        <h1 class="title">Contact with me</h1>
+        <form id="contact-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <div id="recaptcha-container"></div>
+
+            <button class="form_submit" type="submit">Send</button>
+        </form>
+    `;
+
+    grecaptcha.render('recaptcha-container', {
+        'sitekey': SITE_KEY
     });
+
+    document.getElementById('contact-form').addEventListener('submit', handleFormSubmit);
 }
+
+function handleFormSubmit(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+    
+    const captchaResponse = grecaptcha.getResponse();
+    if (!captchaResponse) {
+        alert('Please verify that you are not a robot.');
+        return;
+    }
+
+    if (!name || !email || !message) {
+        alert('Please fill in all fields.');
+        return;
+    }
+
+    alert('Form submitted successfully!');
+}
+
+
 
 function RenderGalleryPage() {
     document.querySelector('main').innerHTML = 
