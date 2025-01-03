@@ -124,6 +124,13 @@ input, textarea{
     font-size: 1rem;
 }
 
+#recaptcha-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
 .form_submit {
     padding: 10px 20px;
     border: none;

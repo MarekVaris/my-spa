@@ -49,15 +49,15 @@ function RenderContactPage() {
 
             <label for="message">Message:</label>
             <textarea id="message" name="message" required></textarea>
-
-            <div id="recaptcha-container"></div>
-
+            <div'>
+                <div id="recaptcha-container"></div>
+            </div>
             <button class="form_submit" type="submit">Send</button>
         </form>
     `;
 
     grecaptcha.render('recaptcha-container', {
-        'sitekey': SITE_KEY
+        'sitekey': '6LcNWK0qAAAAAE3KlXxvAa72HzTtnnOZuubH1Mfx'
     });
 
     document.getElementById('contact-form').addEventListener('submit', handleFormSubmit);
@@ -83,7 +83,6 @@ function handleFormSubmit(event) {
 
     alert('Form submitted successfully!');
 }
-
 
 
 function RenderGalleryPage() {
